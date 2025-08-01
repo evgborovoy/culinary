@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "cooking.apps.CookingConfig",
+    "cooking.apps.CookingConfig"
 ]
 
 MIDDLEWARE = [
