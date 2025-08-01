@@ -10,7 +10,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    content = models.CharField(default="soon...")
+    content = models.TextField(default="soon...")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo = models.ImageField(upload_to="photos/", blank=True, null=True)
