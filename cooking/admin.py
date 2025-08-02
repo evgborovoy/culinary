@@ -10,5 +10,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("pk", "title", "created_at", "category", "is_published")
+    list_display = ("pk", "title", "watched", "created_at", "category", "is_published")
     list_display_links = ("pk", "title")
+    list_editable = ("is_published",)
+    readonly_fields = ("watched", )
+    list_filter = ("is_published", "category")
