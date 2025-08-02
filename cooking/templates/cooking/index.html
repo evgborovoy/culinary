@@ -5,20 +5,9 @@
 {% endblock %}
 
 {% block main %}
-	{% for post in posts %}
-                    <div class="card text-center">
-                        <div class="card-header">
-                            {{ post.category }}
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ post.title }}</h5>
-                            <p class="card-text">{{ post.content }}</p>
-                            <a href="#" class="btn btn-primary">Read more</a>
-                        </div>
-                        <div class="card-footer text-body-secondary">
-                            {{ post.created_at }}
-                        </div>
-                    </div>
-                {% endfor %}
-
+    <h2>Recipes</h2>
+    <div class="d-flex justify-content-between">
+        {% include "cooking/components/category_buttons.html" %}
+        {% include "cooking/components/posts_list.html" %}
+    </div>
 {% endblock %}

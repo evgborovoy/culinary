@@ -16,7 +16,7 @@ class Post(models.Model):
     photo = models.ImageField(upload_to="photos/", blank=True, null=True)
     watched = models.IntegerField(default=0)
     is_published = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="posts")
 
     def __str__(self):
         return f"Post: {self.title}, pk: {self.pk}"

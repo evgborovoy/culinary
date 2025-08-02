@@ -1,0 +1,17 @@
+<div class="col-8">
+    {% for post in posts %}
+        <div class="card text-center">
+            <div class="card-header">
+                {{ post.category }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.content | truncatewords:25 }}</p>
+                <a href="#" class="btn btn-primary">Read more</a>
+            </div>
+            <div class="card-footer text-body-secondary">
+                {{ post.created_at }}
+            </div>
+        </div>
+    {% endfor %}
+</div>
