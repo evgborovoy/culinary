@@ -24,3 +24,6 @@ class Post(models.Model):
 
     def __str__(self):
         return f"Post: {self.title}, pk: {self.pk}"
+
+    def get_absolute_url(self):
+        return reverse("cooking:post_detail", kwargs={"pk": self.pk})

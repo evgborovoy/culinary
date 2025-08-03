@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <main>
+        <div class="d-flex justify-content-between">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">{{ post.category }}
+                        <div>
+                            <a href="#!" class="btn btn-dark">Delete</a>
+                            <a href="#!" class="btn btn-dark">Change</a>
+                            <a href="#!" class="btn btn-dark">Back</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% if post.photo %}
+                            <img src="{{ post.photo.url }}" width="300"
+                                 alt="">
+                        {% else %}
+                            <img src="https://i0.wp.com/castlewoodassistedliving.com/wp-content/uploads/2021/01/image-coming-soon-placeholder.png?fit=1000%2C1000&ssl=1"
+                                 width="300"
+                                 alt="">
+                        {% endif %}
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">
+                            {{ post.content | linebreaks }}
+                        </p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between"><p
+                            class="card-text">{{ post.created_at }}</p>
+                        <a href="/profile/1">author</a>
+                        <p class="card-text">{{ post.watched }}</p>
+                    </div>
+                </div>
+                <hr>
+
+                <!--  reviews-->
+                <form action="#!" method="post" , enctype="multipart/form-data">
+                    <input type="hidden" name="csrfmiddlewaretoken"
+                           value="dVpvJs374bq08P5ZzKsB7pSNUnoJ6PXRIDRXHc1fjvFIdKmbXrQMDMR0wYHLFtut">
+                    <textarea name="text" cols="40" rows="10" class="form-control"
+                              placeholder="Your comment..." required id="id_text"></textarea>
+                    <button class="btn btn-dark" type="submit">Add comment</button>
+                </form>
+                <div class="card mt-2"><h5 class="card-header">author of comment</h5>
+                    <div class="card-body">
+                        <p class="card-text">Comment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
