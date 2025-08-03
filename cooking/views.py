@@ -26,8 +26,10 @@ def category_list(request: HttpRequest, pk: int) -> HttpResponse:
 def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
     post = get_object_or_404(Post, pk=pk)
     Post.objects.filter(pk=pk).update(watched=F("watched") + 1)
+    post_recommends = Post.objects.exclude(pk=pk).order_by("-watched")[:5]
     context = {
         "title": post.title,
         "post": post,
+        "post_recommends": post_recommends,
     }
     return render(request, "cooking/post_detail.html", context=context)
