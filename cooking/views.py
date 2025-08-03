@@ -1,8 +1,9 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F
 
 from .models import Post
+from .forms import PostAddForm
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -33,3 +34,20 @@ def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
         "post_recommends": post_recommends,
     }
     return render(request, "cooking/post_detail.html", context=context)
+
+
+def add_post(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = PostAddForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = Post.objects.create(**form.cleaned_data)
+            post.save()
+            return redirect("cooking:post_detail", post.pk)
+    else:
+        form = PostAddForm()
+
+    context = {
+        "title": "Add post",
+        "form": form,
+    }
+    return render(request, "cooking/add_post.html", context=context)
