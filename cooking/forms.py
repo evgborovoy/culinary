@@ -1,5 +1,6 @@
 from django import forms
 from .models import Post
+from django.contrib.auth.forms import AuthenticationForm
 
 
 class PostAddForm(forms.ModelForm):
@@ -12,3 +13,13 @@ class PostAddForm(forms.ModelForm):
             "category": forms.Select(attrs={"class": "form-control"}),
             "photo": forms.FileInput(attrs={"class": "form-control"}),
         }
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label="Username",
+                               max_length=127,
+                               widget=forms.TextInput(attrs={"class": "form-control"}),
+                               )
+    password = forms.CharField(label="Password",
+                               widget=forms.PasswordInput(attrs={"class": "form-control"}),
+                               )

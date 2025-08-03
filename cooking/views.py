@@ -1,9 +1,10 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F
+from django.contrib.auth import login, logout
 
 from .models import Post
-from .forms import PostAddForm
+from .forms import PostAddForm, LoginForm
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -51,3 +52,25 @@ def add_post(request: HttpRequest) -> HttpResponse:
         "form": form,
     }
     return render(request, "cooking/add_post.html", context=context)
+
+
+def user_login(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            print("for is valid")
+            user = form.get_user()
+            login(request, user)  # without authenticate because it has inside form
+            return redirect("cooking:index")
+    else:
+        form = LoginForm()
+    context = {
+        "title": "Login",
+        "form": form,
+    }
+    return render(request, "cooking/login_form.html", context=context)
+
+
+def user_logout(request: HttpRequest) -> HttpResponse:
+    logout(request)
+    return redirect("cooking:index")
