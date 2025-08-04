@@ -11,7 +11,7 @@ from .forms import PostAddForm, LoginForm, RegistrationForm
 
 
 class Index(ListView):
-    model = Post
+    queryset = Post.objects.filter(is_published=True)
     context_object_name = "posts"
     template_name = "cooking/index.html"
     extra_context = {"title": "Recipes"}
