@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import F
+from django.db.models import F, Q
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -66,6 +66,15 @@ class PostDelete(DeleteView):
         self.object.is_published = False
         self.object.save()
         return HttpResponseRedirect(success_url)
+
+class SearchResults(Index):
+    def get_queryset(self):
+        word = self.request.GET.get("q")
+        posts = Post.objects.filter(
+            Q(title__icontains=word) | Q(content__icontains=word)
+        )
+        return posts
+
 
 
 def user_login(request: HttpRequest) -> HttpResponse:
