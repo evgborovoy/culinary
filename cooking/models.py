@@ -22,6 +22,7 @@ class Post(models.Model):
     watched = models.IntegerField(default=0)
     is_published = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="posts")
+    author = models.ForeignKey(User, default=None, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Post: {self.title}, pk: {self.pk}"

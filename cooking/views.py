@@ -1,6 +1,7 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F, Q
+from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -128,3 +129,12 @@ def user_register(request: HttpRequest) -> HttpResponse:
         "title": "Register"
     }
     return render(request, "cooking/user_register.html", context=context)
+
+def profile(request, user_id):
+    user = User.objects.get(pk=user_id)
+    posts = Post.objects.filter(author=user)
+    context = {
+        "user": user,
+        "posts": posts,
+    }
+    return render(request, "cooking/profile.html", context=context)
