@@ -1,4 +1,4 @@
-from .models import Category, Post
+from .models import Category, Post, Comment
 from django.contrib import admin
 
 
@@ -15,3 +15,10 @@ class PostAdmin(admin.ModelAdmin):
     list_editable = ("is_published",)
     readonly_fields = ("watched",)
     list_filter = ("is_published", "category")
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("pk", "post", "text", "user", "created_at")
+    list_display_links = ("pk",)
+    readonly_fields = ("post", "user")

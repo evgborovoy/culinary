@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from .models import Post, Category
-from .forms import PostAddForm, LoginForm, RegistrationForm
+from .models import Post, Category, Comment
+from .forms import PostAddForm, LoginForm, RegistrationForm, CommentForm
 
 
 class Index(ListView):
@@ -41,6 +41,10 @@ class PostDetail(DetailView):
         context["title"] = post.title
         post_recommends = Post.objects.exclude(pk=self.kwargs["pk"]).order_by("-watched")[:5]
         context["post_recommends"] = post_recommends
+        if self.request.user.is_authenticated:
+            context["comment_form"] = CommentForm
+
+        context["comments"] = Comment.objects.filter(post=post)
         return context
 
 
@@ -67,6 +71,7 @@ class PostDelete(DeleteView):
         self.object.save()
         return HttpResponseRedirect(success_url)
 
+
 class SearchResults(Index):
     def get_queryset(self):
         word = self.request.GET.get("q")
@@ -75,6 +80,16 @@ class SearchResults(Index):
         )
         return posts
 
+
+def add_comment(request: HttpRequest, pk) -> HttpResponse:
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.user = request.user
+        comment.post = Post.objects.get(pk=pk)
+        comment.save()
+        messages.success(request, "Your comment has been successfully added")
+    return redirect("cooking:post_detail", pk)
 
 
 def user_login(request: HttpRequest) -> HttpResponse:
