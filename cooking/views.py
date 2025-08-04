@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F
 from django.contrib.auth import login, logout
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from .models import Post, Category
 from .forms import PostAddForm, LoginForm, RegistrationForm
@@ -47,6 +47,12 @@ class AddPost(CreateView):
     form_class = PostAddForm
     template_name = "cooking/add_post.html"
     extra_context = {"title": "Add post"}
+
+
+class PostUpdate(UpdateView):
+    model = Post
+    form_class = PostAddForm
+    template_name = "cooking/add_post.html"
 
 
 def user_login(request: HttpRequest) -> HttpResponse:
