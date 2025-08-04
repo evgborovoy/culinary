@@ -1,9 +1,10 @@
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F
 from django.contrib.auth import login, logout
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .models import Post, Category
 from .forms import PostAddForm, LoginForm, RegistrationForm
@@ -53,6 +54,17 @@ class PostUpdate(UpdateView):
     model = Post
     form_class = PostAddForm
     template_name = "cooking/add_post.html"
+
+
+class PostDelete(DeleteView):
+    model = Post
+    success_url = reverse_lazy("cooking:index")
+
+    def form_valid(self, form):
+        success_url = self.get_success_url()
+        self.object.is_published = False
+        self.object.save()
+        return HttpResponseRedirect(success_url)
 
 
 def user_login(request: HttpRequest) -> HttpResponse:
