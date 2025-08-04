@@ -54,6 +54,7 @@ class PostUpdate(UpdateView):
     model = Post
     form_class = PostAddForm
     template_name = "cooking/add_post.html"
+    extra_context = {"title": "Update post"}
 
 
 class PostDelete(DeleteView):

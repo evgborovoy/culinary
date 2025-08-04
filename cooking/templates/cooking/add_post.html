@@ -8,11 +8,23 @@
     <div class="d-flex justify-content-center">
         <div class="card col-8 mb-4 mt-4">
             <div class="card-body">
-                <h2 class="text-center">Add new post</h2>
+                <h2 class="text-center">
+                    {% if "update" in request.path %}
+                        Update post
+                    {% else %}
+                        Add new post
+                    {% endif %}
+                </h2>
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button class="btn btn-dark" type="submit">Add</button>
+                    <button class="btn btn-dark" type="submit">
+                        {% if "update" in request.path %}
+                            Update
+                        {% else %}
+                            Add
+                        {% endif %}
+                    </button>
                 </form>
             </div>
         </div>
