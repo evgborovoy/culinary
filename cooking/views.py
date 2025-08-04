@@ -3,56 +3,50 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F
 from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.views.generic import ListView, DetailView, CreateView
 
-from .models import Post
+from .models import Post, Category
 from .forms import PostAddForm, LoginForm, RegistrationForm
 
 
-def index(request: HttpRequest) -> HttpResponse:
-    posts = Post.objects.all()
-    context = {
-        "title": "Recipes",
-        "posts": posts,
-    }
-    return render(request, "cooking/index.html", context=context)
+class Index(ListView):
+    model = Post
+    context_object_name = "posts"
+    template_name = "cooking/index.html"
+    extra_context = {"title": "Recipes"}
 
 
-def category_list(request: HttpRequest, pk: int) -> HttpResponse:
-    posts = Post.objects.filter(category_id=pk)
-    context = {
-        "title": posts[0].category,
-        "posts": posts,
-    }
-    return render(request, "cooking/index.html", context=context)
+class PostsByCategory(Index):
+    def get_queryset(self):
+        return Post.objects.filter(category_id=self.kwargs["pk"], is_published=True)
+
+    def get_context_data(self, *, object_list=..., **kwargs):
+        context = super().get_context_data()
+        category = get_object_or_404(Category, pk=self.kwargs["pk"])
+        context["title"] = category.title
+        return context
 
 
-def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
-    post = get_object_or_404(Post, pk=pk)
-    Post.objects.filter(pk=pk).update(watched=F("watched") + 1)
-    post_recommends = Post.objects.exclude(pk=pk).order_by("-watched")[:5]
-    context = {
-        "title": post.title,
-        "post": post,
-        "post_recommends": post_recommends,
-    }
-    return render(request, "cooking/post_detail.html", context=context)
+class PostDetail(DetailView):
+    template_name = "cooking/post_detail.html"
+
+    def get_queryset(self):
+        return Post.objects.filter(pk=self.kwargs["pk"])
+
+    def get_context_data(self, **kwargs):
+        Post.objects.filter(pk=self.kwargs["pk"]).update(watched=F("watched") + 1)
+        context = super().get_context_data()
+        post = self.object
+        context["title"] = post.title
+        post_recommends = Post.objects.exclude(pk=self.kwargs["pk"]).order_by("-watched")[:5]
+        context["post_recommends"] = post_recommends
+        return context
 
 
-def add_post(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = PostAddForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = Post.objects.create(**form.cleaned_data)
-            post.save()
-            return redirect("cooking:post_detail", post.pk)
-    else:
-        form = PostAddForm()
-
-    context = {
-        "title": "Add post",
-        "form": form,
-    }
-    return render(request, "cooking/add_post.html", context=context)
+class AddPost(CreateView):
+    form_class = PostAddForm
+    template_name = "cooking/add_post.html"
+    extra_context = {"title": "Add post"}
 
 
 def user_login(request: HttpRequest) -> HttpResponse:
