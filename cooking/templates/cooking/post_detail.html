@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-	{{ title }}
+    {{ title }}
 {% endblock %}
 {% block main %}
     <main>
@@ -9,8 +9,10 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">{{ post.category }}
                         <div>
-                            <a href="{% url 'cooking:post_delete' pk=post.pk %}" class="btn btn-dark">Delete</a>
-                            <a href="{% url 'cooking:post_update' pk=post.pk %}" class="btn btn-dark">Change</a>
+                            {% if request.user == post.author %}
+                                <a href="{% url 'cooking:post_delete' pk=post.pk %}" class="btn btn-dark">Delete</a>
+                                <a href="{% url 'cooking:post_update' pk=post.pk %}" class="btn btn-dark">Change</a>
+                            {% endif %}
                             <a href="{% url 'cooking:category_list' pk=post.category.pk %}"
                                class="btn btn-dark">Back</a>
                         </div>
@@ -31,7 +33,7 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between"><p
                             class="card-text">{{ post.created_at }}</p>
-                        <a href="/profile/1">author</a>
+                        <a href="{% url 'cooking:profile' user_id=post.author.pk %}">{{ post.author }}</a>
                         <p class="card-text">{{ post.watched }}</p>
                     </div>
                 </div>

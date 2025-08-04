@@ -54,6 +54,11 @@ class AddPost(CreateView):
     template_name = "cooking/add_post.html"
     extra_context = {"title": "Add post"}
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
 
 class PostUpdate(UpdateView):
     model = Post
