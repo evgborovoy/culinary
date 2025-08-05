@@ -7,9 +7,12 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Post, Category, Comment
 from .forms import PostAddForm, LoginForm, RegistrationForm, CommentForm
+from .serializers import PostSerializer, CategorySerializer
 
 
 class Index(ListView):
@@ -149,3 +152,24 @@ def profile(request, user_id):
         "posts": posts,
     }
     return render(request, "cooking/profile.html", context=context)
+
+
+class PostListAPI(ListAPIView):
+    queryset = Post.objects.filter(is_published=True)
+    serializer_class = PostSerializer
+
+
+class PostDetailAPI(RetrieveAPIView):
+    queryset = Post.objects.filter(is_published=True)
+    serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class CategoryListAPI(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CategoryDetailAPI(RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
