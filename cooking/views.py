@@ -2,6 +2,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F, Q
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -59,7 +60,6 @@ class AddPost(CreateView):
         return super().form_valid(form)
 
 
-
 class PostUpdate(UpdateView):
     model = Post
     form_class = PostAddForm
@@ -85,6 +85,11 @@ class SearchResults(Index):
             Q(title__icontains=word) | Q(content__icontains=word)
         )
         return posts
+
+
+class UserChangePassword(PasswordChangeView):
+    template_name = "cooking/password_change_form.html"
+    success_url = reverse_lazy("cooking:index")
 
 
 def add_comment(request: HttpRequest, pk) -> HttpResponse:
@@ -134,6 +139,7 @@ def user_register(request: HttpRequest) -> HttpResponse:
         "title": "Register"
     }
     return render(request, "cooking/user_register.html", context=context)
+
 
 def profile(request, user_id):
     user = User.objects.get(pk=user_id)

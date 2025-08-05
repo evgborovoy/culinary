@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import user_login, user_logout, user_register, Index, PostsByCategory, PostDetail, AddPost, PostUpdate, \
-    PostDelete, SearchResults, add_comment, profile
+    PostDelete, SearchResults, add_comment, profile, UserChangePassword
 
 app_name = "cooking"
 
@@ -12,6 +12,7 @@ urlpatterns = [
     path("post/<int:pk>/delete/", PostDelete.as_view(), name="post_delete"),
     path("add_post/", AddPost.as_view(), name="add_post"),
     path("search/", SearchResults.as_view(), name="search"),
+    path("change_password/", UserChangePassword.as_view(), name="change_password"),
 
     path("post/<int:pk>/add_comment/", add_comment, name="add_comment"),
     path("login/", user_login, name="login"),
